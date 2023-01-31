@@ -1,2 +1,2 @@
-# diprela
+# DiPreLa
 Diet Pregnancy Lactation
