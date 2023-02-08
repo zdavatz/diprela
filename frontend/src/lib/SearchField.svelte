@@ -142,6 +142,7 @@
     flex-shrink: 0;
   }
   .selected-item {
+    position: relative;
     display: inline-block;
     background: #f9c64f;
     border-radius: 10px;
@@ -155,6 +156,11 @@
   }
   .selected-item.delete-mode {
     background-color: #ff918b;
+  }
+  .selected-item .delete {
+    position: absolute;
+    top: 0;
+    right: 5px;
   }
   .selected-item .delete:hover {
     color: red;
