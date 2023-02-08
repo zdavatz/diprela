@@ -52,7 +52,13 @@
     }
   }
   function addSearchTermFromSuggestion(index) {
-    searchTerms.push(suggestions[index]);
+    const suggestion = suggestions[index];
+    const indexOfSameType = searchTerms.findIndex(s => s.type === suggestion.type);
+    if (indexOfSameType === -1) {
+      searchTerms.push(suggestion);
+    } else {
+      searchTerms.splice(indexOfSameType, 1, suggestion);
+    }
     suggestions = [];
     searchInput = "";
     searchTerms = searchTerms;
