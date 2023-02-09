@@ -116,5 +116,6 @@ app.use(oakCors()); // Enable CORS for All Routes
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-console.log("Listening on 8000");
-await app.listen({ port: 8000 });
+const port = Deno.env.get("PORT") || "8000"
+console.log(`Listening on ${port}`);
+await app.listen({ port: Number(port) });
