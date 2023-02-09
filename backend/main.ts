@@ -1,18 +1,35 @@
-import { Application, Router } from "https://deno.land/x/oak/mod.ts";
-import { oakCors } from "https://deno.land/x/cors/mod.ts";
-import { readCSVRows } from "https://deno.land/x/csv/mod.ts";
+import { Application, Router, send } from "https://deno.land/x/oak@v11.1.0/mod.ts";
+import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
+import { readCSVRows } from "https://deno.land/x/csv@v0.8.0/mod.ts";
+import * as Path from "https://deno.land/std@0.177.0/path/mod.ts";
+
+const staticPath = Path.posix.resolve(new URL('.', import.meta.url).pathname, '..', 'frontend', 'dist');
 
 const router = new Router();
 router
-  .get("/", (context) => {
-    context.response.body = "Welcome!";
-  })
   .get("/api/searchSuggestion/:input", async (context) => {
     const input = context?.params?.input;
     if (input) {
       const result = await getSearchSuggestion(input.toLowerCase());
       context.response.body = result;
     }
+  })
+  .get("/:path+", async (context) => {
+    const relPath = context.params.path || 'index.html';
+    const absPath = Path.resolve(staticPath, relPath);
+    if (!absPath.startsWith(staticPath)) {
+      context.response.status = 403;
+      context.response.body = 'Forbidden';
+      return;
+    }
+    return await send(context, relPath, {
+      root: staticPath,
+    });
+  })
+  .get("/", async (context) => {
+    return await send(context, 'index.html', {
+      root: staticPath,
+    });
   });
 
 const CsvIndex = {
