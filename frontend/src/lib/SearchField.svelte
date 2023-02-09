@@ -20,7 +20,7 @@
       suggestions = [];
       return;
     }
-    const res = await fetch(`http://localhost:8000/api/searchSuggestion/${input}`);
+    const res = await fetch(`/api/searchSuggestion/${input}`);
     const json = await res.json();
     suggestions = json;
   });
@@ -132,14 +132,6 @@
   }
   .container:focus-within {
     outline: solid 2px black;
-  }
-  .selected-list {
-    list-style: none;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    flex-grow: 0;
-    flex-shrink: 0;
   }
   .selected-item {
     position: relative;
