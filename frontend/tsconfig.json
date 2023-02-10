@@ -1,0 +1,6 @@
+{
+    "exclude": ["vite.config.mts"],
+    "compilerOptions": {
+        "types": [],
+    },
+}
