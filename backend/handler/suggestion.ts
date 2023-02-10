@@ -1,10 +1,7 @@
-import { CsvIndex, fetchCSV } from "../csv-store.ts";
+import { CsvIndex, getVitaminNames, getRows } from "../csv-store.ts";
+import { SearchTerm } from "./search.ts";
 
-type Suggestion = {
-  type: "name" | "synonym" | "kategorie" | "vitamin";
-  name: string;
-};
-export async function getSearchSuggestions(input: string): Promise<Suggestion[]> {
+export async function getSearchSuggestions(input: string): Promise<SearchTerm[]> {
   return [
     ...(await getVitaminSuggestions(input)).map((name) => ({
       type: "vitamin" as const,
@@ -15,16 +12,16 @@ export async function getSearchSuggestions(input: string): Promise<Suggestion[]>
 }
 
 async function getVitaminSuggestions(prefix: string): Promise<string[]> {
-  const [vitamins] = await fetchCSV();
+  const vitamins = await getVitaminNames();
   return vitamins.filter((v) => v.toLowerCase().startsWith(prefix));
 }
 
 async function getSuggestionForCSVColumns(
   prefix: string,
-): Promise<Suggestion[]> {
-  const [, rows] = await fetchCSV();
+): Promise<SearchTerm[]> {
+  const rows = await getRows();
   const addedValues = new Set<string>();
-  const results: Suggestion[] = [];
+  const results: SearchTerm[] = [];
   for (const r of rows) {
     for (const [columnName, index] of Object.entries(CsvIndex)) {
       const cellValue = r[index];
@@ -33,7 +30,7 @@ async function getSuggestionForCSVColumns(
         const dedupString = `${columnName}:${cellValueLowerCase}`;
         if (!addedValues.has(dedupString)) {
           results.push({
-            type: columnName.toLowerCase() as Suggestion["type"],
+            type: columnName.toLowerCase() as SearchTerm["type"],
             name: cellValue,
           });
           addedValues.add(dedupString);
