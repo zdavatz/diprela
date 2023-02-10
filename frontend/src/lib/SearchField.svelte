@@ -22,7 +22,7 @@
     }
     const res = await fetch(`/api/searchSuggestion/${input}`);
     const json = await res.json();
-    suggestions = json;
+    suggestions = json.filter(j => searchTerms.find(s=> s.type === j.type && s.name === j.name) === undefined);
   });
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === "ArrowUp") {
