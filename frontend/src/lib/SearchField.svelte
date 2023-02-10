@@ -53,12 +53,10 @@
   }
   function addSearchTermFromSuggestion(index) {
     const suggestion = suggestions[index];
-    const indexOfSameType = searchTerms.findIndex(s => s.type === suggestion.type);
-    if (indexOfSameType === -1) {
+    const sameTerm = searchTerms.find(s => s.type === suggestion.type && s.name === suggestion.name);
+    if (!sameTerm) {
       searchTerms.push(suggestion);
-    } else {
-      searchTerms.splice(indexOfSameType, 1, suggestion);
-    }
+    } 
     suggestions = [];
     searchInput = "";
     searchTerms = searchTerms;
