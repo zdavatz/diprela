@@ -44,7 +44,7 @@ let cachedRows: string[][] | null = null;
 async function preapreCSV(): Promise<[string[], string[][]]> {
   if (!cachedRows || !cachedVitaminNames) {
     const file = await Deno.open(
-      "../csv/Nährwertdatenbank_gesamt_26.01.2022.csv",
+      "../csv/diprela.csv",
     );
     const iterator = readCSVRows(file, { columnSeparator: ";", fromLine: 2 });
 
