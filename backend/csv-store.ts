@@ -1,9 +1,10 @@
 import { readCSVRows } from "https://deno.land/x/csv@v0.8.0/mod.ts";
 
 export const CsvIndex = {
-  Name: 0,
-  Synonym: 1,
-  Kategorie: 2,
+  // 0 is reserved for our own-injected row number (id)
+  Name: 1,
+  Synonym: 2,
+  Kategorie: 3,
 };
 
 let cachedVitaminNames: string[] | null = null;
@@ -50,10 +51,10 @@ async function prepareCSV(): Promise<void> {
     }
     if (val.value === null) continue;
     if (i === 0) {
-      cachedColumns = val.value;
+      cachedColumns = ['id', ...val.value];
       cachedVitaminNames = val.value.slice(4, 44);
     } else {
-      r.push(val.value);
+      r.push([String(i), ...val.value]);
     }
     i++;
   }

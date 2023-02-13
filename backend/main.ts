@@ -1,5 +1,4 @@
 import { Application, Router, send } from "https://deno.land/x/oak@v11.1.0/mod.ts";
-import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import * as Path from "https://deno.land/std@0.177.0/path/mod.ts";
 import { getSearchSuggestions } from "./handler/suggestion.ts";
 import { getSearchResult } from "./handler/search.ts";
@@ -33,9 +32,15 @@ router
       context.response.body = 'Forbidden';
       return;
     }
-    return await send(context, relPath, {
-      root: staticPath,
-    });
+    try {
+      return await send(context, relPath, {
+        root: staticPath,
+      });
+    } catch (_e) {
+      context.response.status = 404;
+      context.response.body = 'Not Found';
+      return;
+    }
   })
   .get("/", async (context) => {
     return await send(context, 'index.html', {
@@ -44,7 +49,6 @@ router
   });
 
 const app = new Application();
-app.use(oakCors()); // Enable CORS for All Routes
 app.use(router.routes());
 app.use(router.allowedMethods());
 
