@@ -1,15 +1,16 @@
-<script lang="ts">
-  import { debounce } from './utils';
-
-  type SearchTerm = {
+<script context="module" lang="ts">
+  export type SearchTerm = {
     type: "name" | "synonym" | "kategorie" | "vitamin";
     name: string;
   };
+</script>
+<script lang="ts">
+  import { debounce } from './utils';
 
   let highlightedSuggestionIndex = 0;
   let searchInput = ""
   let suggestions: SearchTerm[] = [];
-  let searchTerms: SearchTerm[] = [];
+  export let searchTerms: SearchTerm[] = [];
   let lastSearchTermDeleteMode = false;
   let inputElement: HTMLInputElement | null = null;
   let suggestionElements: HTMLElement[] = [];
@@ -110,7 +111,7 @@
     min-height: 50px;
     position: relative;
     display: flex;
-    width: 500px;
+    max-width: 100%;
     flex-wrap: wrap;
   }
   .container input {
@@ -118,7 +119,6 @@
     height: 50px;
     flex-grow: 1;
     flex-shrink: 1;
-    /* background: rgba(255,0,0,0.4); */
     background: transparent;
     font-size: 24px;
     width: 0;
@@ -143,6 +143,7 @@
   .selected-item-type {
     display: block;
     font-size: 0.7em;
+    margin-right: 10px;
   }
   .selected-item.delete-mode {
     background-color: #ff918b;
@@ -166,6 +167,7 @@
     border: solid 1px #bbb;
     border-radius: 10px;
     padding: 5px 10px;
+    background: white;
   }
   .suggestion {
     border-radius: 5px;
