@@ -12,12 +12,18 @@ export type SearchResponse = {
 
 export async function getSearchResult(searchTerms: SearchTerm[]): Promise<SearchResponse> {
   const rows = await getRows();
-  const result = rows.filter(r => isRowMatchSearchTerms(r, searchTerms));
+  const forFilter = filterSearchTerms(searchTerms);
+  const result = forFilter.length ? rows.filter(r => isRowMatchSearchTerms(r, forFilter)) : rows;
   const sortFn = await sortFunctionWithSearchTerms(searchTerms);
   return {
     rows: result.sort(sortFn),
     columnNames: await getColumns(),
   };
+}
+
+// Name, synonym, and kategorie are for filter and vitamin is for sorting
+function filterSearchTerms(searchTerms: SearchTerm[]): SearchTerm[] {
+  return searchTerms.filter(t => ['name', 'synonym', 'kategorie'].includes(t.type));
 }
 
 function isRowMatchSearchTerms(row: string[], searchTerms: SearchTerm[]): boolean {
