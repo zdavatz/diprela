@@ -1,5 +1,5 @@
 {
-    "exclude": ["vite.config.mts"],
+    "exclude": ["vite.config.mts", "node_modules/"],
     "compilerOptions": {
         "types": [],
     },
