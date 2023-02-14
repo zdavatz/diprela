@@ -52,7 +52,7 @@ async function prepareCSV(): Promise<void> {
     if (val.value === null) continue;
     if (i === 0) {
       cachedColumns = ['id', ...val.value];
-      cachedVitaminNames = val.value.slice(4, 44);
+      cachedVitaminNames = val.value.slice(4, 45);
     } else {
       r.push([String(i), ...val.value]);
     }
