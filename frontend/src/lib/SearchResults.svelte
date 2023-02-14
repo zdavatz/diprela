@@ -17,8 +17,14 @@
     });
     const { rows, columnNames } = await res.json();
     searchResultsColumnNames = columnNames;
-    console.log('rows', rows)
     searchResults = rows;
+  }
+
+  function shouldShowCell(value: string): boolean {
+    if (['', '0', 'k.a.', 'Sp.', '-'].includes(value.toLowerCase())) {
+      return false;
+    }
+    return true;
   }
 
   $: search(searchTerms);
@@ -30,10 +36,13 @@
     {@const rowWithoutId = searchResult.slice(1)}
     <div class="search-result">
       {#each colWithoutId as col, index}
-        <div class="column">
-          <div class="name">{col}</div>
-          <div class="value">{rowWithoutId[index]}</div>
-        </div>
+        {@const value = rowWithoutId[index]}
+        {#if shouldShowCell(value)}
+          <div class="column {columnType(index) ?? ''}">
+            <div class="column-name">{col}</div>
+            <div class="value">{value}</div>
+          </div>
+        {/if}
       {/each}
     </div>
   {:else}
