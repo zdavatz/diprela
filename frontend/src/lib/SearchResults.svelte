@@ -17,8 +17,27 @@
     });
     const { rows, columnNames } = await res.json();
     searchResultsColumnNames = columnNames;
-    console.log('rows', rows)
     searchResults = rows;
+  }
+
+  function shouldShowCell(value: string): boolean {
+    if (['', '0', 'k.a.', 'Sp.', '-'].includes(value.toLowerCase())) {
+      return false;
+    }
+    return true;
+  }
+
+  function columnType(index): SearchTerm['type'] | null {
+    if (index === 1) {
+      return 'name';
+    } else if (index === 2) {
+      return 'synonym';
+    } else if (index === 3) {
+      return 'kategorie';
+    } else if (index >= 5 && index <= 45) {
+      return 'vitamin';
+    }
+    return null;
   }
 
   $: search(searchTerms);
@@ -30,12 +49,15 @@
     {@const rowWithoutId = searchResult.slice(1)}
     <div class="search-result">
       {#each colWithoutId as col, index}
-        <div class="column">
-          <div class="name">{col}</div>
-          <div class="value">{rowWithoutId[index]}</div>
-        </div>
+        {@const value = rowWithoutId[index]}
+        {#if shouldShowCell(value)}
+          <div class="column {columnType(index) ?? ''}">
+            <div class="column-name">{col}</div>
+            <div class="value">{value}</div>
+          </div>
+        {/if}
       {/each}
-    </div>
+      </div>
   {:else}
     No results
   {/each}
@@ -58,12 +80,37 @@
     max-width: 200px;
     border-radius: 7px;
     overflow: hidden;
-    border: solid 1px #f9c64f;
+    border: solid 1px gray;
   }
-  .column .name {
-    background: #f9c64f;
+  .column .column-name {
     padding: 3px 5px;
     font-size: 0.7em;
+    background: lightgray;
+  }
+
+  .column.name {
+    border: solid 1px var(--search-name-color);
+  }
+  .column.name .column-name {
+    background: var(--search-name-color);
+  }
+  .column.synonym {
+    border: solid 1px var(--search-synonym-color);
+  }
+  .column.synonym .column-name {
+    background: var(--search-synonym-color);
+  }
+  .column.kategorie {
+    border: solid 1px var(--search-kategorie-color);
+  }
+  .column.kategorie .column-name {
+    background: var(--search-kategorie-color);
+  }
+  .column.vitamin {
+    border: solid 1px var(--search-vitamin-color);
+  }
+  .column.vitamin .column-name {
+    background: var(--search-vitamin-color);
   }
   .column .value {
     padding: 3px 5px;

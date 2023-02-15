@@ -80,7 +80,7 @@
 
 <div class="container" on:click={()=> inputElement?.focus()}>
   {#each searchTerms as searchTerm, index}
-    <span class="selected-item {lastSearchTermDeleteMode && index === searchTerms.length - 1 ? 'delete-mode' : ''}">
+    <span class="selected-item {searchTerm.type} {lastSearchTermDeleteMode && index === searchTerms.length - 1 ? 'delete-mode' : ''}">
       <span class="selected-item-type">{searchTerm.type}</span>{searchTerm.name}
       
       <span class="delete" on:click={()=> deleteSearchTerm(index)}>✕</span>
@@ -134,11 +134,22 @@
   .selected-item {
     position: relative;
     display: inline-block;
-    background: #f9c64f;
     border-radius: 10px;
     margin: 5px;
     padding: 5px 10px;
     font-size: 14px;
+  }
+  .selected-item.name {
+    background: var(--search-name-color);
+  }
+  .selected-item.synonym {
+    background: var(--search-synonym-color);
+  }
+  .selected-item.kategorie {
+    background: var(--search-kategorie-color);
+  }
+  .selected-item.vitamin {
+    background: var(--search-vitamin-color);
   }
   .selected-item-type {
     display: block;
@@ -146,7 +157,7 @@
     margin-right: 10px;
   }
   .selected-item.delete-mode {
-    background-color: #ff918b;
+    outline: dashed 2px #f7180c;
   }
   .selected-item .delete {
     position: absolute;
@@ -154,7 +165,7 @@
     right: 5px;
   }
   .selected-item .delete:hover {
-    color: red;
+    color: gray;
     cursor: pointer;
   }
   .suggestions {
