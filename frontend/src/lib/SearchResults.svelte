@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SearchTerm } from './SearchField.svelte';
+  import { type SearchTerm, searchTermsToString } from './searchTerm';
 
   export let searchTerms: SearchTerm[];
   let searchResultsColumnNames = [];

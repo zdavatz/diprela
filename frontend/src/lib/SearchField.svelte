@@ -1,10 +1,5 @@
-<script context="module" lang="ts">
-  export type SearchTerm = {
-    type: "name" | "synonym" | "kategorie" | "vitamin";
-    name: string;
-  };
-</script>
 <script lang="ts">
+  import { type SearchTerm } from './searchTerm';
   import { debounce } from './utils';
 
   let highlightedSuggestionIndex = 0;
