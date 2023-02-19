@@ -48,6 +48,10 @@
     return null;
   }
 
+  function isVitaminNameSearched(vitaminName: string): boolean {
+    return searchTerms.find(t => t.type === 'vitamin' && t.name === vitaminName) !== undefined;
+  }
+
   $: search(searchTerms);
 </script>
 
@@ -63,7 +67,7 @@
         {@const value = rowWithoutId[index]}
         {#if shouldShowCell(value)}
           <div class="column {columnType(index) ?? ''}">
-            <div class="column-name">{col}</div>
+            <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">{col}</div>
             <div class="value">{value}</div>
           </div>
         {/if}
@@ -122,6 +126,10 @@
   }
   .column.vitamin .column-name {
     background: var(--search-vitamin-color);
+  }
+  .column.vitamin .column-name.highlight {
+    background: #e31414;
+    color: white;
   }
   .column .value {
     padding: 3px 5px;
