@@ -72,6 +72,9 @@
       block: 'nearest'
     });
   }
+  function placeholder(terms): string {
+    return terms.length ? "" : "Suche nach Vitamin, Produkt, Synonym oder Kategorie";
+  }
   $: fetchSuggestion(searchInput)
   $: scrollToSuggestion(highlightedSuggestionIndex);
 </script>
@@ -84,7 +87,12 @@
       <span class="delete" on:click={()=> deleteSearchTerm(index)}>✕</span>
     </span>
   {/each}
-  <input bind:this={inputElement} bind:value={searchInput} on:keydown={handleKeydown} />
+  <input
+    bind:this={inputElement}
+    bind:value={searchInput}
+    on:keydown={handleKeydown}
+    placeholder={placeholder(searchTerms)}
+  />
   {#if isLoading}
   <div class="loading"></div>
   {/if}
