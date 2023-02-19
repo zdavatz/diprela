@@ -9,6 +9,7 @@
   let lastSearchTermDeleteMode = false;
   let inputElement: HTMLInputElement | null = null;
   let suggestionElements: HTMLElement[] = [];
+  let isLoading = false;
 
   const fetchSuggestion = debounce(async (input)=> {
     highlightedSuggestionIndex = 0;
@@ -16,8 +17,10 @@
       suggestions = [];
       return;
     }
+    isLoading = true;
     const res = await fetch(`/api/searchSuggestion/${input}`);
     const json = await res.json();
+    isLoading = false;
     suggestions = json.filter(j => searchTerms.find(s=> s.type === j.type && s.name === j.name) === undefined);
   });
   function handleKeydown(event: KeyboardEvent) {
@@ -82,6 +85,9 @@
     </span>
   {/each}
   <input bind:this={inputElement} bind:value={searchInput} on:keydown={handleKeydown} />
+  {#if isLoading}
+  <div class="loading"></div>
+  {/if}
 </div>
 
 {#if suggestions.length > 0}
@@ -187,5 +193,9 @@
   }
   .highlight {
     background: #ddd;
+  }
+  .loading {
+    align-self: center;
+    margin-right: 5px;
   }
 </style>

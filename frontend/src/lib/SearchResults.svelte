@@ -4,6 +4,7 @@
   export let searchTerms: SearchTerm[];
   let searchResultsColumnNames = [];
   let searchResults = [];
+  let isLoading = false;
 
   async function search(searchTerms: SearchTerm[]) {
     if (searchTerms.length === 0) {
@@ -15,9 +16,11 @@
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(searchTerms)
     });
+    isLoading = true;
     const { rows, columnNames } = await res.json();
     searchResultsColumnNames = columnNames;
     searchResults = rows;
+    isLoading = false;
   }
 
   function shouldShowCell(value: string): boolean {
@@ -44,6 +47,9 @@
 </script>
 
 <div class="search-results">
+  {#if isLoading}
+    <div class="loading"></div>
+  {/if}
   {#each searchResults as searchResult (searchResult[0])}
     {@const colWithoutId = searchResultsColumnNames.slice(1)}
     {@const rowWithoutId = searchResult.slice(1)}
@@ -114,5 +120,8 @@
   }
   .column .value {
     padding: 3px 5px;
+  }
+  .loading {
+    margin: 10px auto;
   }
 </style>
