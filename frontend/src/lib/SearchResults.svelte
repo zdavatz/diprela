@@ -2,6 +2,7 @@
   import { type SearchTerm, searchTermsToString } from './searchTerm';
 
   export let searchTerms: SearchTerm[];
+  let searchedTerms: SearchTerm[]; // Needed to remember the previous terms to dedup search
   let searchResultsColumnNames = [];
   let searchResults = [];
   let isLoading = false;
@@ -11,6 +12,10 @@
       searchResults = [];
       return;
     }
+    if (searchTermsToString(searchTerms) === searchTermsToString(searchedTerms)) {
+      return;
+    }
+    searchedTerms = [...searchTerms];
     const res = await fetch('/api/search', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
