@@ -19,6 +19,9 @@ function searchTermsToURL(terms: SearchTerm[]): string {
 function urlToSearchTerms(location: string): SearchTerm[] {
   const url = new URL(location);
   const searchTermsString = url.pathname.split('/')[2];
+  if (!searchTermsString) {
+    return [];
+  }
   return searchTermsString.split(',').map(str => {
     const [type, name] = str.split(':');
     return {
