@@ -2,7 +2,7 @@
   --search-name-color: #f9c64f;
   --search-synonym-color: #e8e80d;
   --search-kategorie-color: #00d000;
-  --search-vitamin-color: #ff8585;
+  --search-vitamin-color: #ffa8a8;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -82,4 +82,18 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.loading {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

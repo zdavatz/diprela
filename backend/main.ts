@@ -46,6 +46,11 @@ router
     return await send(context, 'index.html', {
       root: staticPath,
     });
+  })
+  .get("/search/:path+", async (context) => {
+    return await send(context, 'index.html', {
+      root: staticPath,
+    });
   });
 
 const app = new Application();
