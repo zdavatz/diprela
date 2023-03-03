@@ -24,6 +24,16 @@ router
       context.response.body = result;
     }
   })
+  .get("/", async (context) => {
+    return await send(context, 'index.html', {
+      root: staticPath,
+    });
+  })
+  .get("/search/:path+", async (context) => {
+    return await send(context, 'index.html', {
+      root: staticPath,
+    });
+  })
   .get("/:path+", async (context) => {
     const relPath = context.params.path || 'index.html';
     const absPath = Path.resolve(staticPath, relPath);
@@ -41,11 +51,6 @@ router
       context.response.body = 'Not Found';
       return;
     }
-  })
-  .get("/", async (context) => {
-    return await send(context, 'index.html', {
-      root: staticPath,
-    });
   });
 
 const app = new Application();

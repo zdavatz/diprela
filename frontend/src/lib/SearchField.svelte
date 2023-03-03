@@ -1,10 +1,5 @@
-<script context="module" lang="ts">
-  export type SearchTerm = {
-    type: "name" | "synonym" | "kategorie" | "vitamin";
-    name: string;
-  };
-</script>
 <script lang="ts">
+  import { type SearchTerm } from './searchTerm';
   import { debounce } from './utils';
 
   let highlightedSuggestionIndex = 0;
@@ -14,6 +9,7 @@
   let lastSearchTermDeleteMode = false;
   let inputElement: HTMLInputElement | null = null;
   let suggestionElements: HTMLElement[] = [];
+  let isLoading = false;
 
   const fetchSuggestion = debounce(async (input)=> {
     highlightedSuggestionIndex = 0;
@@ -21,8 +17,10 @@
       suggestions = [];
       return;
     }
+    isLoading = true;
     const res = await fetch(`/api/searchSuggestion/${input}`);
     const json = await res.json();
+    isLoading = false;
     suggestions = json.filter(j => searchTerms.find(s=> s.type === j.type && s.name === j.name) === undefined);
   });
   function handleKeydown(event: KeyboardEvent) {
@@ -74,6 +72,9 @@
       block: 'nearest'
     });
   }
+  function placeholder(terms): string {
+    return terms.length ? "" : "Suche nach Vitamin, Produkt, Synonym oder Kategorie";
+  }
   $: fetchSuggestion(searchInput)
   $: scrollToSuggestion(highlightedSuggestionIndex);
 </script>
@@ -86,7 +87,15 @@
       <span class="delete" on:click={()=> deleteSearchTerm(index)}>✕</span>
     </span>
   {/each}
-  <input bind:this={inputElement} bind:value={searchInput} on:keydown={handleKeydown} />
+  <input
+    bind:this={inputElement}
+    bind:value={searchInput}
+    on:keydown={handleKeydown}
+    placeholder={placeholder(searchTerms)}
+  />
+  {#if isLoading}
+  <div class="loading"></div>
+  {/if}
 </div>
 
 {#if suggestions.length > 0}
@@ -192,5 +201,9 @@
   }
   .highlight {
     background: #ddd;
+  }
+  .loading {
+    align-self: center;
+    margin-right: 5px;
   }
 </style>

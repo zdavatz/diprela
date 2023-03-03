@@ -1,23 +1,31 @@
 <script lang="ts">
-  import type { SearchTerm } from './SearchField.svelte';
+  import { type SearchTerm, searchTermsToString } from './searchTerm';
 
   export let searchTerms: SearchTerm[];
+  let searchedTerms: SearchTerm[]; // Needed to remember the previous terms to dedup search
   let searchResultsColumnNames = [];
   let searchResults = [];
+  let isLoading = false;
 
   async function search(searchTerms: SearchTerm[]) {
     if (searchTerms.length === 0) {
       searchResults = [];
       return;
     }
+    if (searchTermsToString(searchTerms) === searchTermsToString(searchedTerms)) {
+      return;
+    }
+    searchedTerms = [...searchTerms];
     const res = await fetch('/api/search', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(searchTerms)
     });
+    isLoading = true;
     const { rows, columnNames } = await res.json();
     searchResultsColumnNames = columnNames;
     searchResults = rows;
+    isLoading = false;
   }
 
   function shouldShowCell(value: string): boolean {
@@ -40,10 +48,17 @@
     return null;
   }
 
+  function isVitaminNameSearched(vitaminName: string): boolean {
+    return searchTerms.find(t => t.type === 'vitamin' && t.name === vitaminName) !== undefined;
+  }
+
   $: search(searchTerms);
 </script>
 
 <div class="search-results">
+  {#if isLoading}
+    <div class="loading"></div>
+  {/if}
   {#each searchResults as searchResult (searchResult[0])}
     {@const colWithoutId = searchResultsColumnNames.slice(1)}
     {@const rowWithoutId = searchResult.slice(1)}
@@ -52,7 +67,7 @@
         {@const value = rowWithoutId[index]}
         {#if shouldShowCell(value)}
           <div class="column {columnType(index) ?? ''}">
-            <div class="column-name">{col}</div>
+            <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">{col}</div>
             <div class="value">{value}</div>
           </div>
         {/if}
@@ -112,7 +127,14 @@
   .column.vitamin .column-name {
     background: var(--search-vitamin-color);
   }
+  .column.vitamin .column-name.highlight {
+    background: #e31414;
+    color: white;
+  }
   .column .value {
     padding: 3px 5px;
+  }
+  .loading {
+    margin: 10px auto;
   }
 </style>
