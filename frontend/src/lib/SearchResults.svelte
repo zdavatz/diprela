@@ -87,7 +87,7 @@
     flex-flow: row wrap;
     gap: 10px;
     margin: 20px 0;
-    border: solid 1px black;
+    border: solid 1px var(--text-color);
     padding: 10px;
     border-radius: 10px;
   }
@@ -100,7 +100,7 @@
   .column .column-name {
     padding: 3px 5px;
     font-size: 0.7em;
-    background: lightgray;
+    background: var(--search-other-color);
   }
 
   .column.name {
