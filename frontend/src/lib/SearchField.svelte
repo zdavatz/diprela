@@ -187,7 +187,7 @@
     border: solid 1px #bbb;
     border-radius: 10px;
     padding: 5px 10px;
-    background: white;
+    background-color: var(--secondary-background-color);
   }
   .suggestion {
     border-radius: 5px;
@@ -200,7 +200,7 @@
     font-size: 0.7em;
   }
   .highlight {
-    background: #ddd;
+    background: var(--highlight-background-color);
   }
   .loading {
     align-self: center;
