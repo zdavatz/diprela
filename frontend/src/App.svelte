@@ -8,7 +8,7 @@
   function setSearchTermURL(terms: SearchTerm[]) {
     const newURL = searchTermsToURL(terms);
     if (newURL !== new URL(document.location.href).pathname) {
-      history.pushState(null, '', newURL);
+      history.pushState(null, '', newURL || '/');
     }
   }
 
