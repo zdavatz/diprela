@@ -4,7 +4,7 @@ export const CsvIndex = {
   // 0 is reserved for our own-injected row number (id)
   Name: 1,
   Synonym: 2,
-  Kategorie: 3,
+  Kategorie: 4,
 };
 
 let cachedVitaminNames: string[] | null = null;
@@ -52,7 +52,7 @@ async function prepareCSV(): Promise<void> {
     if (val.value === null) continue;
     if (i === 0) {
       cachedColumns = ['id', ...val.value];
-      cachedVitaminNames = val.value.slice(4, 45);
+      cachedVitaminNames = val.value.slice(5, 45);
     } else {
       r.push([String(i), ...val.value]);
     }

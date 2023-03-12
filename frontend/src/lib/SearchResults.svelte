@@ -36,9 +36,9 @@
   }
 
   function columnType(index): SearchTerm['type'] | null {
-    if (index === 1) {
+    if (index === 0) {
       return 'name';
-    } else if (index === 2) {
+    } else if (index === 1) {
       return 'synonym';
     } else if (index === 3) {
       return 'kategorie';
