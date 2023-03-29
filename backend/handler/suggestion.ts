@@ -25,13 +25,13 @@ async function getSuggestionForCSVColumns(
   for (const r of rows) {
     for (const [columnName, index] of Object.entries(CsvIndex)) {
       const cellValue = r[index];
-      const cellValueLowerCase = cellValue.toLowerCase();
+      const cellValueLowerCase = cellValue.toLowerCase().trim();
       if (cellValueLowerCase.startsWith(prefix)) {
         const dedupString = `${columnName}:${cellValueLowerCase}`;
         if (!addedValues.has(dedupString)) {
           results.push({
             type: columnName.toLowerCase() as SearchTerm["type"],
-            name: cellValue,
+            name: cellValue.trim(),
           });
           addedValues.add(dedupString);
         }
