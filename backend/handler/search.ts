@@ -1,4 +1,4 @@
-import { CsvIndex, getColumns, getRows } from "../csv-store.ts";
+import { CsvIndex, getColumns, getRows, splitCellIntoTerms } from "../csv-store.ts";
 
 export type SearchTerm = {
   type: "name" | "synonym" | "kategorie" | "vitamin";
@@ -31,14 +31,13 @@ function isRowMatchSearchTerms(row: string[], searchTerms: SearchTerm[]): boolea
 }
 
 function isRowMatchSearchTerm(row: string[], searchTerm: SearchTerm): boolean {
-  const candidate = searchTerm.type === 'name' ? row[CsvIndex.Name]
-    : searchTerm.type === 'synonym' ? row[CsvIndex.Synonym]
-    : searchTerm.type === 'kategorie' ? row[CsvIndex.Kategorie]
+  const index = searchTerm.type === 'name' ? CsvIndex.Name
+    : searchTerm.type === 'synonym' ? CsvIndex.Synonym
+    : searchTerm.type === 'kategorie' ? CsvIndex.Kategorie
     : null;
-  if (candidate?.toLowerCase()?.startsWith(searchTerm.name.toLowerCase())) {
-    return true;
-  }
-  return false;
+  if (!index) return false;
+  const candidates = splitCellIntoTerms(index, row[index]);
+  return candidates.some(c => c.toLowerCase()?.startsWith(searchTerm.name.toLowerCase()));
 }
 
 async function sortFunctionWithSearchTerms(searchTerms: SearchTerm[]) {
