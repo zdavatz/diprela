@@ -36,7 +36,7 @@ async function prepareCSV(): Promise<void> {
   const file = await Deno.open(
     "../csv/diprela.csv",
   );
-  const iterator = readCSVRows(file, { columnSeparator: ";", fromLine: 2 });
+  const iterator = readCSVRows(file, { columnSeparator: ";", fromLine: 4 });
 
   let i = 0;
   const r = [];
