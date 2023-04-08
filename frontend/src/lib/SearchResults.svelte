@@ -29,7 +29,7 @@
   }
 
   function shouldShowCell(value: string): boolean {
-    if (['', '0', 'k.a.', 'Sp.', '-'].includes(value.toLowerCase())) {
+    if (['', '0', 'k.a.', 'sp.', '-'].includes(value.trim().toLowerCase())) {
       return false;
     }
     return true;
