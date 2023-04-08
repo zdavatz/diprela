@@ -61,3 +61,9 @@ async function prepareCSV(): Promise<void> {
   cachedRows = r;
 }
 
+export function splitCellIntoTerms(index: number, cellValue: string): string[] {
+  if (index === CsvIndex.Synonym) {
+    return cellValue.split(',').map(s => s.trim());
+  }
+  return [cellValue];
+}
