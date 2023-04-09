@@ -36,7 +36,7 @@ async function prepareCSV(): Promise<void> {
   const file = await Deno.open(
     "../csv/diprela.csv",
   );
-  const iterator = readCSVRows(file, { columnSeparator: ";", fromLine: 2 });
+  const iterator = readCSVRows(file, { columnSeparator: ";", fromLine: 4 });
 
   let i = 0;
   const r = [];
@@ -61,3 +61,9 @@ async function prepareCSV(): Promise<void> {
   cachedRows = r;
 }
 
+export function splitCellIntoTerms(index: number, cellValue: string): string[] {
+  if (index === CsvIndex.Synonym) {
+    return cellValue.split(',').map(s => s.trim());
+  }
+  return [cellValue];
+}

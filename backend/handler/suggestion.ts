@@ -1,4 +1,4 @@
-import { CsvIndex, getVitaminNames, getRows } from "../csv-store.ts";
+import { CsvIndex, getVitaminNames, getRows, splitCellIntoTerms } from "../csv-store.ts";
 import { SearchTerm } from "./search.ts";
 
 export async function getSearchSuggestions(input: string): Promise<SearchTerm[]> {
@@ -24,16 +24,18 @@ async function getSuggestionForCSVColumns(
   const results: SearchTerm[] = [];
   for (const r of rows) {
     for (const [columnName, index] of Object.entries(CsvIndex)) {
-      const cellValue = r[index];
-      const cellValueLowerCase = cellValue.toLowerCase().trim();
-      if (cellValueLowerCase.startsWith(prefix)) {
-        const dedupString = `${columnName}:${cellValueLowerCase}`;
-        if (!addedValues.has(dedupString)) {
-          results.push({
-            type: columnName.toLowerCase() as SearchTerm["type"],
-            name: cellValue.trim(),
-          });
-          addedValues.add(dedupString);
+      const cellValues = splitCellIntoTerms(index, r[index]);
+      for (const cellValue of cellValues) {
+        const cellValueLowerCase = cellValue.toLowerCase().trim();
+        if (cellValueLowerCase.startsWith(prefix)) {
+          const dedupString = `${columnName}:${cellValueLowerCase}`;
+          if (!addedValues.has(dedupString)) {
+            results.push({
+              type: columnName.toLowerCase() as SearchTerm["type"],
+              name: cellValue.trim(),
+            });
+            addedValues.add(dedupString);
+          }
         }
       }
     }
