@@ -29,18 +29,18 @@
   }
 
   function shouldShowCell(value: string): boolean {
-    if (['', '0', 'k.a.', 'Sp.', '-'].includes(value.toLowerCase())) {
+    if (['', '0', 'k.a.', 'sp.', '-'].includes(value.trim().toLowerCase())) {
       return false;
     }
     return true;
   }
 
   function columnType(index): SearchTerm['type'] | null {
-    if (index === 0) {
+    if (index === 1) {
       return 'name';
-    } else if (index === 1) {
+    } else if (index === 2) {
       return 'synonym';
-    } else if (index === 3) {
+    } else if (index === 4) {
       return 'kategorie';
     } else if (index >= 5 && index <= 45) {
       return 'vitamin';
@@ -66,7 +66,7 @@
       {#each colWithoutId as col, index}
         {@const value = rowWithoutId[index]}
         {#if shouldShowCell(value)}
-          <div class="column {columnType(index) ?? ''}">
+          <div class="column {columnType(index + 1) ?? ''}">
             <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">{col}</div>
             <div class="value">{value}</div>
           </div>
