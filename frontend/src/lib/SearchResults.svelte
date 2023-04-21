@@ -52,6 +52,11 @@
     return searchTerms.find(t => t.type === 'vitamin' && t.name === vitaminName) !== undefined;
   }
 
+  function columnValueHtmlWithLink(value: string) {
+    const keyword = "Verzehr in der Schwangerschaft meiden!";
+    return value.replaceAll(keyword, `<a href="/pdf/Lebensmittelbedingte_Infektionskrankheiten.pdf">${keyword}</a>`);
+  }
+
   $: search(searchTerms);
 </script>
 
@@ -68,7 +73,7 @@
         {#if shouldShowCell(value)}
           <div class="column {columnType(index + 1) ?? ''}">
             <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">{col}</div>
-            <div class="value">{value}</div>
+            <div class="value">{@html columnValueHtmlWithLink(value)}</div>
           </div>
         {/if}
       {/each}
