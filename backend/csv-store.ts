@@ -1,4 +1,7 @@
+import * as Path from "https://deno.land/std@0.177.0/path/mod.ts";
 import { readCSVRows } from "https://deno.land/x/csv@v0.8.0/mod.ts";
+
+const pdfPath = Path.posix.resolve(new URL('.', import.meta.url).pathname, '..', 'pdf');
 
 export const CsvIndex = {
   // 0 is reserved for our own-injected row number (id)
@@ -30,6 +33,33 @@ export async function getRows(): Promise<string[][]> {
     await prepareCSV();
   }
   return cachedRows!;
+}
+
+export async function getColumnPdfs(): Promise<(string | null)[]> {
+  const columns = await getColumns();
+  const names: (string | null)[] = columns.map(_ => null);
+  for await (const dirEntry of Deno.readDir(pdfPath)) {
+    const results = /([A-Z]{1,2})(-[A-Z]{1,2})?.pdf$/g.exec(dirEntry.name);
+    if (results === null || results.length < 2) {
+      continue;
+    }
+    const from = columnToIndex(results[1]);
+    const to = results[2] === undefined ? from : columnToIndex(results[2].replace('-', ''));
+    for (let i = from; i <= to; i++) {
+      names[i] = dirEntry.name;
+    }
+  }
+  return names;
+}
+
+// e.g. A = 1, B = 2, AA = 27
+function columnToIndex(column: string): number {
+  let result = 0;
+  for (let i = 0; i < column.length; i++) {
+    const thisDigit = column.codePointAt(i)! - 64;
+    result = result * 26 + thisDigit;
+  }
+  return result;
 }
 
 async function prepareCSV(): Promise<void> {
