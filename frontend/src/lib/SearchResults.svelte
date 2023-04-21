@@ -54,7 +54,7 @@
 
   function columnValueHtmlWithLink(value: string) {
     const keyword = "Verzehr in der Schwangerschaft meiden!";
-    return value.replaceAll(keyword, `<a href="/pdf/Lebensmittelbedingte_Infektionskrankheiten.pdf">${keyword}</a>`);
+    return value.replaceAll(keyword, `<a target="_blank" href="/pdf/Lebensmittelbedingte_Infektionskrankheiten.pdf">${keyword}</a>`);
   }
 
   $: search(searchTerms);
