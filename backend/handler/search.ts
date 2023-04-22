@@ -49,6 +49,11 @@ async function sortFunctionWithSearchTerms(searchTerms: SearchTerm[]) {
   const columns = await getColumns();
   const vitaminIndexes = vitaminNames.map(v => columns.indexOf(v)).filter(i => i >= 0);
   return function(row1: string[], row2: string[]): number {
+    const row1VitaminCount = vitaminIndexes.map(index => sensitizeVitaminValue(row1[index])).filter(value => value !== 0).length;
+    const row2VitaminCount = vitaminIndexes.map(index => sensitizeVitaminValue(row2[index])).filter(value => value !== 0).length;
+    if (row1VitaminCount !== row2VitaminCount) {
+      return row2VitaminCount - row1VitaminCount;
+    }
     for (const index of vitaminIndexes) {
       const compareResult = sensitizeVitaminValue(row2[index]) - sensitizeVitaminValue(row1[index]);
       if (compareResult !== 0) {
