@@ -4,6 +4,7 @@ import { getSearchSuggestions } from "./handler/suggestion.ts";
 import { getSearchResult } from "./handler/search.ts";
 
 const staticPath = Path.posix.resolve(new URL('.', import.meta.url).pathname, '..', 'frontend', 'dist');
+const pdfPath = Path.posix.resolve(new URL('.', import.meta.url).pathname, '..', 'pdf');
 
 const router = new Router();
 router
@@ -33,6 +34,23 @@ router
     return await send(context, 'index.html', {
       root: staticPath,
     });
+  })
+  .get("/pdf/:path+", async (context)=> {
+    const relPath = context.params.path;
+    if (relPath === undefined || !Path.resolve(pdfPath, relPath).startsWith(pdfPath)) {
+      context.response.status = 403;
+      context.response.body = 'Forbidden';
+      return;
+    }
+    try {
+      return await send(context, relPath, {
+        root: pdfPath,
+      });
+    } catch (_e) {
+      context.response.status = 404;
+      context.response.body = 'Not Found';
+      return;
+    }
   })
   .get("/:path+", async (context) => {
     const relPath = context.params.path || 'index.html';

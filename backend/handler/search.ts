@@ -1,4 +1,4 @@
-import { CsvIndex, getColumns, getRows, splitCellIntoTerms } from "../csv-store.ts";
+import { CsvIndex, getColumns, getRows, splitCellIntoTerms, getColumnPdfs } from "../csv-store.ts";
 
 export type SearchTerm = {
   type: "name" | "synonym" | "kategorie" | "vitamin";
@@ -8,6 +8,7 @@ export type SearchTerm = {
 export type SearchResponse = {
   rows: string[][];
   columnNames: string[],
+  columnUrls: (string | null)[],
 }
 
 export async function getSearchResult(searchTerms: SearchTerm[]): Promise<SearchResponse> {
@@ -15,9 +16,11 @@ export async function getSearchResult(searchTerms: SearchTerm[]): Promise<Search
   const forFilter = filterSearchTerms(searchTerms);
   const result = forFilter.length ? rows.filter(r => isRowMatchSearchTerms(r, forFilter)) : rows;
   const sortFn = await sortFunctionWithSearchTerms(searchTerms);
+  const pdfs = await getColumnPdfs();
   return {
     rows: result.sort(sortFn),
     columnNames: await getColumns(),
+    columnUrls: pdfs.map(filename => filename && `/pdf/${filename}`),
   };
 }
 
@@ -46,6 +49,11 @@ async function sortFunctionWithSearchTerms(searchTerms: SearchTerm[]) {
   const columns = await getColumns();
   const vitaminIndexes = vitaminNames.map(v => columns.indexOf(v)).filter(i => i >= 0);
   return function(row1: string[], row2: string[]): number {
+    const row1VitaminCount = vitaminIndexes.map(index => sensitizeVitaminValue(row1[index])).filter(value => value !== 0).length;
+    const row2VitaminCount = vitaminIndexes.map(index => sensitizeVitaminValue(row2[index])).filter(value => value !== 0).length;
+    if (row1VitaminCount !== row2VitaminCount) {
+      return row2VitaminCount - row1VitaminCount;
+    }
     for (const index of vitaminIndexes) {
       const compareResult = sensitizeVitaminValue(row2[index]) - sensitizeVitaminValue(row1[index]);
       if (compareResult !== 0) {

@@ -5,6 +5,7 @@
   let searchedTerms: SearchTerm[]; // Needed to remember the previous terms to dedup search
   let searchResultsColumnNames = [];
   let searchResults = [];
+  let searchResultsColumnUrls = [];
   let isLoading = false;
 
   async function search(searchTerms: SearchTerm[]) {
@@ -22,9 +23,10 @@
       body: JSON.stringify(searchTerms)
     });
     isLoading = true;
-    const { rows, columnNames } = await res.json();
+    const { rows, columnNames, columnUrls } = await res.json();
     searchResultsColumnNames = columnNames;
     searchResults = rows;
+    searchResultsColumnUrls = columnUrls;
     isLoading = false;
   }
 
@@ -54,7 +56,15 @@
 
   function columnValueHtmlWithLink(value: string) {
     const keyword = "Verzehr in der Schwangerschaft meiden!";
-    return value.replaceAll(keyword, `<a href="/pdf/Lebensmittelbedingte_Infektionskrankheiten.pdf">${keyword}</a>`);
+    return value.replaceAll(keyword, `<a target="_blank" href="/pdf/Lebensmittelbedingte_Infektionskrankheiten.pdf">${keyword}</a>`);
+  }
+
+  function columnNameHtmlWithLink(colIndex: number): string {
+    const url = searchResultsColumnUrls[colIndex];
+    if (!url) {
+      return searchResultsColumnNames[colIndex];
+    }
+    return `<a target="_blank" href="${url}">${searchResultsColumnNames[colIndex]}</a>`
   }
 
   $: search(searchTerms);
@@ -67,12 +77,20 @@
   {#each searchResults as searchResult (searchResult[0])}
     {@const colWithoutId = searchResultsColumnNames.slice(1)}
     {@const rowWithoutId = searchResult.slice(1)}
+    {@const colUrlsWithoutId = searchResultsColumnUrls.slice(1)}
     <div class="search-result">
       {#each colWithoutId as col, index}
         {@const value = rowWithoutId[index]}
+        {@const url = colUrlsWithoutId[index]}
         {#if shouldShowCell(value)}
           <div class="column {columnType(index + 1) ?? ''}">
-            <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">{col}</div>
+            <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">
+              {#if url !== null}
+                <a href={url} target="_blank" rel="noreferrer">{col}</a>
+              {:else}
+                {col}
+              {/if}
+            </div>
             <div class="value">{@html columnValueHtmlWithLink(value)}</div>
           </div>
         {/if}
