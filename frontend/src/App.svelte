@@ -23,6 +23,7 @@
 <svelte:window on:popstate={loadSearchTermsFromURL} />
 
 <main>
+  <a href="/pdf/Anleitung.pdf" target="_blank">Anleitung</a>
   <SearchField bind:searchTerms={searchTerms} />
   <SearchResults searchTerms={searchTerms} />
 </main>
