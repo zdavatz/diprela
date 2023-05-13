@@ -73,32 +73,33 @@
 <div class="search-results">
   {#if isLoading}
     <div class="loading"></div>
-  {/if}
-  {#each searchResults as searchResult (searchResult[0])}
-    {@const colWithoutId = searchResultsColumnNames.slice(1)}
-    {@const rowWithoutId = searchResult.slice(1)}
-    {@const colUrlsWithoutId = searchResultsColumnUrls.slice(1)}
-    <div class="search-result">
-      {#each colWithoutId as col, index}
-        {@const value = rowWithoutId[index]}
-        {@const url = colUrlsWithoutId[index]}
-        {#if shouldShowCell(value)}
-          <div class="column {columnType(index + 1) ?? ''}">
-            <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">
-              {#if url !== null}
-                <a href={url} target="_blank" rel="noreferrer">{col}</a>
-              {:else}
-                {col}
-              {/if}
-            </div>
-            <div class="value">{@html columnValueHtmlWithLink(value)}</div>
-          </div>
-        {/if}
-      {/each}
-      </div>
   {:else}
-    No results
-  {/each}
+    {#each searchResults as searchResult (searchResult[0])}
+      {@const colWithoutId = searchResultsColumnNames.slice(1)}
+      {@const rowWithoutId = searchResult.slice(1)}
+      {@const colUrlsWithoutId = searchResultsColumnUrls.slice(1)}
+      <div class="search-result">
+        {#each colWithoutId as col, index}
+          {@const value = rowWithoutId[index]}
+          {@const url = colUrlsWithoutId[index]}
+          {#if shouldShowCell(value)}
+            <div class="column {columnType(index + 1) ?? ''}">
+              <div class="column-name {isVitaminNameSearched(col) ? 'highlight' : ''}">
+                {#if url !== null}
+                  <a href={url} target="_blank" rel="noreferrer">{col}</a>
+                {:else}
+                  {col}
+                {/if}
+              </div>
+              <div class="value">{@html columnValueHtmlWithLink(value)}</div>
+            </div>
+          {/if}
+        {/each}
+        </div>
+    {:else}
+      No results
+    {/each}
+  {/if}
 </div>
 
 <style>

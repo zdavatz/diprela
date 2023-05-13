@@ -13,8 +13,9 @@ export type SearchResponse = {
 
 export async function getSearchResult(searchTerms: SearchTerm[]): Promise<SearchResponse> {
   const rows = await getRows();
-  const forFilter = filterSearchTerms(searchTerms);
-  const result = forFilter.length ? rows.filter(r => isRowMatchSearchTerms(r, forFilter)) : rows;
+  const nskSearchTerms = filterNSKSearchTerms(searchTerms);
+  const vitaminIndexes = await columnIndexOfVitaminSearchTerms(searchTerms);
+  const result = rows.filter(r => isRowMatchSearchTerms(r, nskSearchTerms, vitaminIndexes));
   const sortFn = await sortFunctionWithSearchTerms(searchTerms);
   const pdfs = await getColumnPdfs();
   return {
@@ -24,16 +25,32 @@ export async function getSearchResult(searchTerms: SearchTerm[]): Promise<Search
   };
 }
 
-// Name, synonym, and kategorie are for filter and vitamin is for sorting
-function filterSearchTerms(searchTerms: SearchTerm[]): SearchTerm[] {
-  return searchTerms.filter(t => ['name', 'synonym', 'kategorie'].includes(t.type));
+function filterNSKSearchTerms(searchTerms: SearchTerm[]): SearchTerm[] {
+  return searchTerms.filter(s => s.type === 'name' || s.type === 'synonym' || s.type === 'kategorie');
 }
 
-function isRowMatchSearchTerms(row: string[], searchTerms: SearchTerm[]): boolean {
-  return searchTerms.some(s => isRowMatchSearchTerm(row, s));
+async function columnIndexOfVitaminSearchTerms(searchTerms: SearchTerm[]): Promise<number[]> {
+  const vitaminNames = searchTerms.filter(s => s.type === 'vitamin').map(s => s.name);
+  if (!vitaminNames.length) return [];
+  const columns = await getColumns();
+  const vitaminIndexes = vitaminNames.map(v => columns.indexOf(v)).filter(i => i >= 0);
+  return vitaminIndexes;
 }
 
-function isRowMatchSearchTerm(row: string[], searchTerm: SearchTerm): boolean {
+function isRowMatchSearchTerms(row: string[], nskSearchTerms: SearchTerm[], vitaminIndexes: number[]): boolean {
+  if (!nskSearchTerms.length && !vitaminIndexes.length) {
+    return false; // Empty when there's no search term
+  }
+  const nskMatch = nskSearchTerms.length
+    ? nskSearchTerms.some(s => isRowMatchNSKSearchTerm(row, s))
+    : true;
+  const vitaminMatch = vitaminIndexes.length
+    ? vitaminIndexes.map(index => sensitizeVitaminValue(row[index])).filter(value => value !== 0).length > 0
+    : true;
+  return nskMatch && vitaminMatch;
+}
+
+function isRowMatchNSKSearchTerm(row: string[], searchTerm: SearchTerm): boolean {
   const index = searchTerm.type === 'name' ? CsvIndex.Name
     : searchTerm.type === 'synonym' ? CsvIndex.Synonym
     : searchTerm.type === 'kategorie' ? CsvIndex.Kategorie
@@ -44,10 +61,10 @@ function isRowMatchSearchTerm(row: string[], searchTerm: SearchTerm): boolean {
 }
 
 async function sortFunctionWithSearchTerms(searchTerms: SearchTerm[]) {
-  const vitaminNames = searchTerms.filter(s => s.type === 'vitamin').map(s => s.name);
-  if (!vitaminNames.length) return undefined;
-  const columns = await getColumns();
-  const vitaminIndexes = vitaminNames.map(v => columns.indexOf(v)).filter(i => i >= 0);
+  const vitaminIndexes = await columnIndexOfVitaminSearchTerms(searchTerms);
+  if (!vitaminIndexes.length) {
+    return undefined;
+  }
   return function(row1: string[], row2: string[]): number {
     const row1VitaminCount = vitaminIndexes.map(index => sensitizeVitaminValue(row1[index])).filter(value => value !== 0).length;
     const row2VitaminCount = vitaminIndexes.map(index => sensitizeVitaminValue(row2[index])).filter(value => value !== 0).length;
