@@ -73,7 +73,7 @@
     });
   }
   function placeholder(terms): string {
-    return terms.length ? "" : "Suche nach Vitamin, Produkt, Synonym oder Kategorie";
+    return terms.length ? "" : "Suche nach Nährstoff, Produkt oder Kategorie";
   }
   $: fetchSuggestion(searchInput)
   $: scrollToSuggestion(highlightedSuggestionIndex);
