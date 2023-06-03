@@ -156,9 +156,11 @@
   }
   .selected-item.kategorie {
     background: var(--search-kategorie-color);
+    color: var(--white-text-color);
   }
   .selected-item.vitamin {
     background: var(--search-vitamin-color);
+    color: var(--white-text-color);
   }
   .selected-item-type {
     display: block;

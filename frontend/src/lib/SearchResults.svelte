@@ -47,7 +47,7 @@
     } else if (index >= 5 && index <= 45) {
       return 'vitamin';
     }
-    return null;
+    return 'other';
   }
 
   function isVitaminNameSearched(vitaminName: string): boolean {
@@ -144,16 +144,21 @@
   }
   .column.kategorie .column-name {
     background: var(--search-kategorie-color);
+    color: var(--white-text-color);
   }
   .column.vitamin {
     border: solid 1px var(--search-vitamin-color);
   }
   .column.vitamin .column-name {
     background: var(--search-vitamin-color);
+    color: var(--white-text-color);
   }
   .column.vitamin .column-name.highlight {
-    background: #e31414;
+    background: rgb(36, 196, 36);
     color: white;
+  }
+  .column.other .column-name {
+    color: var(--white-text-color);
   }
   .column .value {
     padding: 3px 5px;
