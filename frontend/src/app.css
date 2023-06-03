@@ -1,9 +1,9 @@
 :root {
   --search-name-color: #b8891c;
   --search-synonym-color: #bdbd26;
-  --search-kategorie-color: #1b941b;
-  --search-vitamin-color: #b53333;;
-  --search-other-color: rgb(121, 121, 121);
+  --search-kategorie-color: #0F52BA;
+  --search-vitamin-color: #008b00;
+  --search-other-color: #cd853f;
   --secondary-background-color: #333333;
   --highlight-background-color: #555555;
 
@@ -12,7 +12,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  --text-color: rgba(255, 255, 255, 0.87);
+  --white-text-color: rgba(255, 255, 255, 0.87);
+  --text-color: var(--white-text-color);
   color: var(--text-color);
   background-color: #242424;
 
@@ -78,9 +79,9 @@ button:focus-visible {
   :root {
     --search-name-color: #f9c64f;
     --search-synonym-color: #e8e80d;
-    --search-kategorie-color: #00d000;
-    --search-vitamin-color: #ffa8a8;
-    --search-other-color: lightgray;
+    --search-kategorie-color: #0F52BA;
+    --search-vitamin-color: #008b00;
+    --search-other-color: #cd853f;
     --secondary-background-color: #eee;
     --highlight-background-color: #ddd;
     --text-color: #213547;
