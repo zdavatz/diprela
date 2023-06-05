@@ -1,6 +1,6 @@
 :root {
   --search-name-color: #b8891c;
-  --search-synonym-color: #bdbd26;
+  --search-synonym-color: #eee8aa;
   --search-kategorie-color: #0F52BA;
   --search-vitamin-color: #1b851b;
   --search-other-color: #cd853f;
@@ -78,7 +78,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     --search-name-color: #f9c64f;
-    --search-synonym-color: #e8e80d;
+    --search-synonym-color: #eee8aa;
     --search-kategorie-color: #0F52BA;
     --search-vitamin-color: #1b851b;
     --search-other-color: #cd853f;
