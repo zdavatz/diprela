@@ -1,7 +1,10 @@
 :root {
+/* Dark mode */
   --search-name-color: #b8891c;
   --search-synonym-color: #eee8aa;
   --search-kategorie-color: #0F52BA;
+  --search-unterkategorie-color: #b2dfee;
+  --search-bezugseinheit-color: #9acd32;
   --search-vitamin-color: #1b851b;
   --search-other-color: #cd853f;
   --secondary-background-color: #333333;
@@ -13,6 +16,7 @@
 
   color-scheme: light dark;
   --white-text-color: rgba(255, 255, 255, 0.87);
+  --black-text-color: #213547;
   --text-color: var(--white-text-color);
   color: var(--text-color);
   background-color: #242424;
@@ -76,15 +80,13 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: light) {
+/* Light mode */
   :root {
     --search-name-color: #f9c64f;
-    --search-synonym-color: #eee8aa;
-    --search-kategorie-color: #0F52BA;
-    --search-vitamin-color: #1b851b;
     --search-other-color: #cd853f;
     --secondary-background-color: #eee;
     --highlight-background-color: #ddd;
-    --text-color: #213547;
+    --text-color: var(--black-text-color);
     background-color: #ffffff;
   }
   a:hover {
