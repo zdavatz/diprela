@@ -1,6 +1,8 @@
 <script lang="ts">
   import { type SearchTerm, searchTermsToString } from './searchTerm';
 
+  type ColumnType = SearchTerm['type'] | 'unterkategorie' | 'bezugseinheit';
+
   export let searchTerms: SearchTerm[];
   let searchedTerms: SearchTerm[]; // Needed to remember the previous terms to dedup search
   let searchResultsColumnNames = [];
@@ -37,14 +39,18 @@
     return true;
   }
 
-  function columnType(index): SearchTerm['type'] | null {
+  function columnType(index): ColumnType | null {
     if (index === 1) {
       return 'name';
     } else if (index === 2) {
       return 'synonym';
+    } else if (index === 3) {
+      return 'unterkategorie'
     } else if (index === 4) {
       return 'kategorie';
-    } else if (index >= 5 && index <= 45) {
+    } else if (index === 5) {
+      return 'bezugseinheit';
+    } else if (index >= 6 && index <= 45) {
       return 'vitamin';
     }
     return 'other';
@@ -138,6 +144,7 @@
   }
   .column.synonym .column-name {
     background: var(--search-synonym-color);
+    color: var(--black-text-color);
   }
   .column.kategorie {
     border: solid 1px var(--search-kategorie-color);
@@ -145,6 +152,20 @@
   .column.kategorie .column-name {
     background: var(--search-kategorie-color);
     color: var(--white-text-color);
+  }
+  .column.unterkategorie {
+    border: solid 1px var(--search-unterkategorie-color);
+  }
+  .column.unterkategorie .column-name {
+    background: var(--search-unterkategorie-color);
+    color: var(--black-text-color);
+  }
+  .column.bezugseinheit {
+    border: solid 1px var(--search-bezugseinheit-color);
+  }
+  .column.bezugseinheit .column-name {
+    background: var(--search-bezugseinheit-color);
+    color: var(--black-text-color);
   }
   .column.vitamin {
     border: solid 1px var(--search-vitamin-color);
