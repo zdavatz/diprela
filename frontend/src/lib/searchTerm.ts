@@ -2,7 +2,7 @@ export type SearchTerm = {
   type: 'name' | 'synonym' | 'kategorie' | 'vitamin';
   name: string;
 };
-export const AllSearchTermTypes: SearchTerm['type'][] = ['name', 'synonym', 'kategorie', 'vitamin'];
+export const AllSearchTermTypes: SearchTerm['type'][] = ['name', 'synonym', 'kategorie', 'nährstoff'];
 
 function searchTermsToString(terms: SearchTerm[]) {
   if (!terms) return '';
