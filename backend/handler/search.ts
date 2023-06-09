@@ -85,5 +85,20 @@ function sensitizeVitaminValue(val: string): number {
   if (val === "k.A." || val === "Sp.") {
     return 0;
   }
-  return Number(val);
+  return safeStringToNumber(val);
+}
+
+function safeStringToNumber(val: string): number {
+  let numString = '';
+  for (let i = 0; i < val.length; i++) {
+    const thisChar = val[i];
+    if (thisChar === ' ' || (thisChar.charCodeAt(0) >= 48 && thisChar.charCodeAt(0) <= 57)) {
+      numString += thisChar;
+    } else if (thisChar === '.' || thisChar === ',') {
+      numString += '.';
+    } else {
+      break;
+    }
+  }
+  return Number(numString);
 }
