@@ -1,7 +1,7 @@
 import { CsvIndex, getColumns, getRows, splitCellIntoTerms, getColumnPdfs } from "../csv-store.ts";
 
 export type SearchTerm = {
-  type: "name" | "synonym" | "kategorie" | "vitamin";
+  type: "name" | "synonym" | "kategorie" | "nährstoff";
   name: string;
 };
 
