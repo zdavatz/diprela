@@ -25,7 +25,7 @@ function urlToSearchTerms(location: string): SearchTerm[] {
   return searchTermsString.split(',').map(str => {
     const [type, name] = str.split(':');
     return {
-      type,
+      type: decodeURIComponent(type),
       name: decodeURIComponent(name)
     } as SearchTerm;
   });
