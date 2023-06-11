@@ -158,7 +158,7 @@
     background: var(--search-kategorie-color);
     color: var(--white-text-color);
   }
-  .selected-item.vitamin {
+  .selected-item.nährstoff {
     background: var(--search-vitamin-color);
     color: var(--white-text-color);
   }
