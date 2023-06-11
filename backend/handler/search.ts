@@ -30,7 +30,7 @@ function filterNSKSearchTerms(searchTerms: SearchTerm[]): SearchTerm[] {
 }
 
 async function columnIndexOfVitaminSearchTerms(searchTerms: SearchTerm[]): Promise<number[]> {
-  const vitaminNames = searchTerms.filter(s => s.type === 'vitamin').map(s => s.name);
+  const vitaminNames = searchTerms.filter(s => s.type === 'nährstoff').map(s => s.name);
   if (!vitaminNames.length) return [];
   const columns = await getColumns();
   const vitaminIndexes = vitaminNames.map(v => columns.indexOf(v)).filter(i => i >= 0);

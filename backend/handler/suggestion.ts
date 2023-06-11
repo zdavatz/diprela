@@ -4,7 +4,7 @@ import { SearchTerm } from "./search.ts";
 export async function getSearchSuggestions(input: string): Promise<SearchTerm[]> {
   return [
     ...(await getVitaminSuggestions(input)).map((name) => ({
-      type: "vitamin" as const,
+      type: "nährstoff" as const,
       name,
     })),
     ...await getSuggestionForCSVColumns(input),
